@@ -54,7 +54,8 @@ class FoundryTaskAgent:
                 print(f"Agent with name '{agent_name}' not found in project.")
                 return
                         
-            # Create a conversation for this session
+            # App Service authentication protects this sample, which intentionally
+            # keeps one server-managed conversation per worker process.
             conversation = self.openai_client.conversations.create()
             self.conversation_id = conversation.id
             print("Foundry agent initialized successfully")
