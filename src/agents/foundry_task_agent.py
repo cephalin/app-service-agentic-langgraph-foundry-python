@@ -1,3 +1,4 @@
+import asyncio
 import os
 from typing import Optional
 from azure.identity import DefaultAzureCredential
@@ -83,13 +84,15 @@ class FoundryTaskAgent:
         
         try:
             # Add user message to the conversation
-            self.openai_client.conversations.items.create(
+            await asyncio.to_thread(
+                self.openai_client.conversations.items.create,
                 conversation_id=self.conversation_id,
                 items=[{"type": "message", "role": "user", "content": message}],
             )
             
             # Create response using the agent
-            response = self.openai_client.responses.create(
+            response = await asyncio.to_thread(
+                self.openai_client.responses.create,
                 conversation=self.conversation_id,
                 extra_body={"agent": {"name": self.agent.name, "type": "agent_reference"}},
                 input="",
